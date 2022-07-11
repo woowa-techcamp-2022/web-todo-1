@@ -28,7 +28,25 @@
 
 html {
   background-color: var(--bg-color);
+  height: 100%;
 }
 
 body {
+  height: 100%;
+}
+
+.wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: var(--title-text);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 60px 0;
+  align-items: center;
 }
