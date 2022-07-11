@@ -10,6 +10,7 @@
   --drag: rgba(255, 255, 255, 0.8);
   --place-opacity: 0.4;
   --place-boder-color: #0075de;
+  --caption-text-color: #bdbdbd;
 
   --title-text: 32px;
   --column-title-text: 18px;
@@ -24,6 +25,8 @@
   --button-text: 14px;
 
   --alert-text: 18px;
+
+  --content-margin: 8px;
 }
 
 html {
@@ -40,13 +43,102 @@ body {
   margin: 0 auto;
 }
 
-.title {
+.page-title {
   font-size: var(--title-text);
 }
 
-.header {
+.page-header {
   display: flex;
   justify-content: space-between;
   padding: 60px 0;
   align-items: center;
+}
+
+.todo-list-wrapper {
+  display: flex;
+}
+
+/* column */
+.column {
+  width: 350px;
+  margin-left: 16px;
+}
+.column:first-child {
+  margin-left: 0px;
+}
+
+.column > .header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+}
+
+.column .title {
+  font-size: var(--column-title-text);
+  display: flex;
+  align-items: center;
+}
+
+.column .badge {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  margin-left: 8px;
+  gap: 10px;
+
+  width: 26px;
+  height: 26px;
+
+  /* Gray 4 */
+
+  background: #bdbdbd;
+  border-radius: 20px;
+}
+
+.column .btn-plus-icon {
+  width: 10.75px;
+  height: 10.75px;
+}
+
+.column .btn-delete-icon {
+  width: 10.5px;
+  height: 10.5px;
+}
+
+/* Card */
+
+.card-wrapper {
+}
+
+.card {
+  margin-top: calc(2 * var(--content-margin));
+  background-color: white;
+  padding: 16px;
+  border-radius: 6px;
+  box-shadow: 0px 1px 30px rgba(224, 224, 224, 0.3);
+}
+
+.card .header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card .title {
+  font-size: var(--card-title-text);
+  font-weight: 700;
+}
+
+.card .body {
+  margin-top: var(--content-margin);
+  font-size: var(--card-body-text);
+}
+.card .caption {
+  margin-top: var(--content-margin);
+  font-size: var(--card-caption-text);
+  color: var(--caption-text-color);
 }
