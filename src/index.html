@@ -7,9 +7,9 @@
     <div class="wrapper">
       <header class="page-header">
         <div><h1 class="page-title">TO-DO LIST</h1></div>
-        <div>
+        <button class="menu">
           <svg
-            class="menu"
+            class="menu-icon"
             width="17"
             height="11"
             viewBox="0 0 17 11"
@@ -21,7 +21,7 @@
               fill="black"
             />
           </svg>
-        </div>
+        </button>
       </header>
       <main>
         <div class="todo-list-wrapper">
@@ -143,6 +143,41 @@
         </div>
       </main>
       <footer></footer>
+      <div class="drawer">
+        <div class="header">
+          <button class="close-btn">
+            <svg
+              class="btn-delete-icon"
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M1.5 11.25L0.75 10.5L5.25 6L0.75 1.5L1.5 0.75L6 5.25L10.5 0.75L11.25 1.5L6.75 6L11.25 10.5L10.5 11.25L6 6.75L1.5 11.25Z"
+                fill="black"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <ul class="action-stack">
+          <li class="action-item">
+            <div class="profile">
+              <img src="../public/user-img.png" alt="" />
+            </div>
+            <div>
+              <div class="header">@연정</div>
+              <div class="body">
+                HTML/CSS공부하기를 해야할 일에 서 하고 있는 일로
+                <strong>이동</strong>하였습니다.
+              </div>
+              <div class="time-stamp">1분전</div>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
   </body>
 </html>
