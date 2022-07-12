@@ -11,7 +11,7 @@
   --place-opacity: 0.4;
   --place-boder-color: #0075de;
   --caption-text-color: #bdbdbd;
-
+  --drag-bg-color: rgba(255, 255, 255, 0.8);
   --title-text: 32px;
   --column-title-text: 18px;
   --card-title-text: 16px;
@@ -152,6 +152,75 @@ body {
   color: var(--caption-text-color);
 }
 
+.card.delete {
+  background-color: var(--delete);
+  border: 1px solid var(--delete-border-color);
+}
+.card.delete .btn-delete-icon {
+  stroke: var(--delete-border-color);
+  stroke-width: 0.5px;
+}
+
+.card.delete .btn-delete-icon path {
+  fill: red;
+  fill: var(--delete-border-color);
+}
+.card.drag {
+  background-color: var(--drag-bg-color);
+  box-shadow: 0px 0px 4px rgba(204, 204, 204, 0.5),
+    0px 2px 4px rgba(0, 0, 0, 0.25);
+}
+.card.place {
+  opacity: 0.4;
+  border: 1px solid var(--place-boder-color);
+}
+
+.card.active {
+  border: 1px solid var(--accent-default);
+}
+
+.card.deactive {
+  color: var(--normal-hover);
+  border: 1px solid var(--accent-default);
+}
+
+.card .btn-wrapper {
+  margin-top: var(--content-margin);
+  font-size: var(--card-body-text);
+  display: flex;
+}
+
+.card .btn:first-child {
+  margin-right: 8px;
+}
+
+.card .btn:last-child {
+  margin-right: 0px;
+}
+
+.card .btn {
+  padding: 10px;
+  width: 50%;
+  border-radius: 6px;
+}
+
+.btn.normal {
+  background-color: var(--normal-default);
+  color: var(--normal-hover);
+}
+.btn.accent {
+  background-color: var(--accent-default);
+  color: white;
+}
+
+.card.deactive .btn.accent {
+  background-color: var(--accent-disabled);
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.card.deactive .btn.normal {
+  background-color: var(--);
+}
 /* drawer */
 .drawer {
   position: absolute;
