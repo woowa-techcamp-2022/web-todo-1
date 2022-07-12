@@ -102,17 +102,20 @@ body {
   border-radius: 20px;
 }
 
-.column .btn-plus-icon {
+.column .btn-plus-icon svg {
   width: 10.75px;
   height: 10.75px;
 }
 
-.column .btn-plus-icon:hover {
-  stroke: var(--accent-default);
+.column .btn-plus-icon:hover path {
   fill: var(--accent-default);
 }
 
-.column .btn-delete-icon {
+.column .btn-delete-icon:hover path {
+  fill: var(--delete-border-color);
+}
+
+.column .btn-delete-icon svg {
   width: 10.5px;
   height: 10.5px;
 }
@@ -156,13 +159,8 @@ body {
   background-color: var(--delete);
   border: 1px solid var(--delete-border-color);
 }
-.card.delete .btn-delete-icon {
-  stroke: var(--delete-border-color);
-  stroke-width: 0.5px;
-}
 
 .card.delete .btn-delete-icon path {
-  fill: red;
   fill: var(--delete-border-color);
 }
 .card.drag {
