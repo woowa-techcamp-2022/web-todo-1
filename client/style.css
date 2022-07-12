@@ -107,6 +107,11 @@ body {
   height: 10.75px;
 }
 
+.column .btn-plus-icon:hover {
+  stroke: var(--accent-default);
+  fill: var(--accent-default);
+}
+
 .column .btn-delete-icon {
   width: 10.5px;
   height: 10.5px;
