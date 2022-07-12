@@ -276,3 +276,16 @@ body {
   height: 40px;
   margin-right: 16px;
 }
+
+/* FAB */
+.fab {
+  position: fixed;
+  right: 40px;
+  bottom: 30px;
+  cursor: pointer;
+}
+
+.fab svg {
+  -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.2));
+}
