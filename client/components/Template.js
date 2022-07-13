@@ -5,7 +5,7 @@ export default class Template {
   }
 
   getCard({ title, body, author }) {
-    return `<div class="card">
+    return `
         <div class="header">
           <div class="title">
             <span>${title}</span>
@@ -29,19 +29,18 @@ export default class Template {
           <p>${body}</p>
         </div>
         <div class="caption">${author}</div>
-      </div>`;
+      `;
   }
 
-  getColumn({ key, name }, data) {
+  getColumnHeader({ columnName, tasks }) {
     return `
-    <div class="column" data-id=${key}>
             <div class="header">
               <div class="title">
-                <span>${name}</span>
-                <span class="badge">${data[key]["tasks"].length}</span>
+                <span>${columnName}</span>
+                <span class="badge">${tasks.length}</span>
               </div>
               <div class="btn-wrapper">
-                <button class="btn-plus-icon" data-id=${key}>
+                <button class="btn-plus-icon">
                   <svg
                     class=""
                     width="14"
@@ -72,11 +71,7 @@ export default class Template {
                 </button>
               </div>
             </div>
-
-            <div class="card-wrapper">
-              ${data[key].tasks.map((task) => this.getCard(task)).join("")}
-            </div>
-          </div>`;
+         `;
   }
   getCardInput() {
     return `

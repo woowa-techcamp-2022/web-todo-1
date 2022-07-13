@@ -1,9 +1,7 @@
 import "./reset.css";
 import "./style.css";
-
-import TodoListStore from "./model/TodoListStore";
-import TodoListView from "./views/TodoListView";
-import Controller from "./controller";
+import { qs } from "./util";
+import TodoList from "./components/TodoList";
 
 const menuBtn = document.querySelector(".menu");
 const drawer = document.querySelector(".drawer");
@@ -18,15 +16,14 @@ closeBtn.addEventListener("click", () => {
   drawer.classList.remove("open");
 });
 
-window.addEventListener("DOMContentLoaded", () => {
-  const todoListIds = [
-    { name: "해야할 일", key: "todo" },
-    { name: "진행중인 일", key: "inProgress" },
-    { name: "한 일", key: "done" },
-  ];
+function App() {
+  const todoListContainer = qs(".todo-list-wrapper");
+  const actionStackContainer = qs(".action-stack");
 
-  const todoListView = new TodoListView(".todo-list-wrapper", todoListIds);
-  const todoListStore = new TodoListStore(todoListIds);
+  const todoList = new TodoList(todoListContainer);
 
-  const controller = new Controller({ todoListStore }, { todoListView });
-});
+  // todoList 인스턴스를 만들어서 초기화
+  // actionStack 인스턴스를 만들고 초기화
+}
+
+const app = new App();
