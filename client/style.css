@@ -27,6 +27,9 @@
   --alert-text: 18px;
 
   --content-margin: 8px;
+
+  --title-line-height: 23px;
+  --body-line-height: 20px;
 }
 
 html {
@@ -141,6 +144,7 @@ body {
 }
 
 .card .title {
+  line-height: var(--title-line-height);
   font-size: var(--card-title-text);
   font-weight: 700;
 }
@@ -148,6 +152,7 @@ body {
 .card .body {
   margin-top: var(--content-margin);
   font-size: var(--card-body-text);
+  line-height: var(--body-line-height);
 }
 .card .caption {
   margin-top: var(--content-margin);
@@ -218,6 +223,24 @@ body {
 
 .card.deactive .btn.normal {
   background-color: var(--);
+}
+
+.card.active input {
+  width: 100%;
+  outline: none;
+  border: none;
+  font-weight: 700;
+  font-size: var(--card-title-text);
+}
+
+.card.active textarea {
+  font-size: var(--card-body-text);
+  resize: none;
+  width: 100%;
+  max-height: 341px;
+  overflow-y: visible;
+  outline: none;
+  border: none;
 }
 /* drawer */
 .drawer {

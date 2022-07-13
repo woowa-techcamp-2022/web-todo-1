@@ -78,4 +78,25 @@ export default class Template {
             </div>
           </div>`;
   }
+  getCardInput() {
+    return `
+        <form class="card active">
+        <div class="header">
+          <div class="title">
+            <input required name="title" placeholder="제목을 입력하세요" id="title"></input>
+          </div>
+        </div>
+
+        <div class="body">
+          <textarea placeholder="내용을 입력하세요" name="body" required autofocus aria-label="Enter a note" maxlength="500" ></textarea>
+        </div>
+        <div class="btn-wrapper">
+          <button data-action="cancle" class="normal btn">취소</button>
+          <button data-action="register" class="accent btn">
+            등록
+          </button>
+        </div>
+      </div>
+    `;
+  }
 }
