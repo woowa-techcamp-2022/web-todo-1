@@ -1,11 +1,13 @@
+import { qs, on } from "../util";
 import Store from "../util/Store";
 import Column from "./Column";
 import Component from "./Component";
-
 import { data } from "./mockdata";
+import Template from "./Template";
 export default class TodoList extends Component {
   constructor(container, props) {
     super(container, props);
+    this.template = new Template();
 
     const initialState = {
       todoList: data,
@@ -16,13 +18,16 @@ export default class TodoList extends Component {
     this.columnComponents = this.getColumComponents();
 
     this.init();
+    this.bindEvents();
   }
 
+  bindEvents() {}
   getColumComponents() {
     const columnComponents = [];
     const todoList = this.store.state["todoList"];
     Object.keys(todoList).forEach((columnID) => {
       const container = document.createElement("div");
+      this.container.appendChild(container);
       container.dataset.columnId = columnID;
       container.classList.add("column");
       // column id는 database에 있는 foreign 키로 사용되는 id이다.
@@ -43,13 +48,9 @@ export default class TodoList extends Component {
   render() {
     const { todoList } = this.store.state;
 
-    const columTemplate = this.columnComponents
-      .map((columnComponent) => columnComponent.render(todoList))
-      .join("");
-
-    this.container.innerHTML = columTemplate;
-
-    return this.container.outerHTML;
+    this.columnComponents.forEach((columnComponent) => {
+      columnComponent.render(todoList);
+    });
   }
 
   init() {
