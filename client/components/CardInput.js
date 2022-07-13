@@ -32,6 +32,13 @@ export default class CardInput extends Component {
         }
       }
     });
+
+    on(this.container, "submit", (event) => {
+      event.preventDefault();
+      if (!(this.store.state.body && this.store.state.title)) {
+        return;
+      }
+    });
   }
   render() {
     const { title, body } = this.store.state;

@@ -35,6 +35,12 @@ export default class Column extends Component {
     });
 
     on(this.container, "keyup", ({ target }) => {});
+
+    on(this.container, "click", ({ target }) => {
+      if (target.dataset.action === "cancle") {
+        this.store.setState("isOpen", false);
+      }
+    });
   }
 
   getCardComponents() {
