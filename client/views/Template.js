@@ -10,9 +10,8 @@ export default class Template {
           <div class="title">
             <span>${title}</span>
           </div>
-          <button>
+          <button class="btn-delete-icon">
             <svg
-              class="btn-delete-icon"
               width="12"
               height="12"
               viewBox="0 0 12 12"
@@ -35,16 +34,16 @@ export default class Template {
 
   getColumn({ key, name }, data) {
     return `
-    <div class="column" data-id-${key}>
+    <div class="column" data-id=${key}>
             <div class="header">
               <div class="title">
                 <span>${name}</span>
-                <span class="badge">2</span>
+                <span class="badge">${data[key]["tasks"].length}</span>
               </div>
               <div class="btn-wrapper">
-                <button>
+                <button class="btn-plus-icon" data-id=${key}>
                   <svg
-                    class="btn-plus-icon"
+                    class=""
                     width="14"
                     height="14"
                     viewBox="0 0 14 14"
@@ -57,9 +56,8 @@ export default class Template {
                     />
                   </svg>
                 </button>
-                <button>
+                <button class="btn-delete-icon">
                   <svg
-                    class="btn-delete-icon"
                     width="12"
                     height="12"
                     viewBox="0 0 12 12"
