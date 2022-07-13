@@ -34,11 +34,7 @@ export default class Column extends Component {
       this.store.setState("isOpen", !this.store.state.isOpen);
     });
 
-    on(this.container, "keyup", ({ target }) => {
-      if (target.tagName === "TEXTAREA") {
-        target.style.height = target.scrollHeight + "px";
-      }
-    });
+    on(this.container, "keyup", ({ target }) => {});
   }
 
   getCardComponents() {
