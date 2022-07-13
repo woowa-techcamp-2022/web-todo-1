@@ -1,18 +1,17 @@
-import { qs, on } from "../util";
+import { qs, on, emit } from "../util";
 import Store from "../util/Store";
 import Component from "./Component";
 import Template from "./Template";
 
 export default class CardInput extends Component {
-  constructor(container, task) {
+  constructor(container, { columnId }) {
     super(container);
-    this.template = new Template();
 
     const initialState = {
       title: "",
       body: "",
     };
-
+    this.columnId = columnId;
     this.store = new Store(initialState);
     this.bindEvents();
   }
@@ -35,9 +34,14 @@ export default class CardInput extends Component {
 
     on(this.container, "submit", (event) => {
       event.preventDefault();
-      if (!(this.store.state.body && this.store.state.title)) {
+      const { title, body } = this.store.state;
+
+      if (!(title && body)) {
         return;
       }
+      console.log(this.columnId);
+      const task = { title, body, author: "교영", columnId: this.columnId };
+      emit(this.container, "@newTask", task);
     });
   }
   render() {

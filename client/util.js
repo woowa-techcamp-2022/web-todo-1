@@ -30,6 +30,6 @@ export function delegate(target, eventName, selector, handler) {
 }
 
 export function emit(target, eventName, detail) {
-  const event = new CustomEvent(eventName, { detail });
+  const event = new CustomEvent(eventName, { detail, bubbles: true });
   target.dispatchEvent(event);
 }

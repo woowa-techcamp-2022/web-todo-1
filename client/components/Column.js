@@ -5,23 +5,20 @@ import { qs, on } from "../util";
 import Store from "../util/Store";
 import CardInput from "./CardInput";
 
+/**
+ * props : columnName, columnId, todoList
+ */
 export default class Column extends Component {
-  constructor(container, { columnName, columnID, todoList }) {
+  constructor(container, { columnName, columnId, todoList }) {
     super(container);
     this.store = new Store({ isOpen: false }, this.render.bind(this));
     this.todoList = todoList;
     this.columnName = columnName;
-    this.columnID = columnID;
-    this.template = new Template();
-
-    const { tasks } = todoList[this.columnID];
-    this.tasks = tasks;
-    this.cardComponents = this.getCardComponents();
+    this.columnId = columnId;
 
     const cardInputContainer = document.createElement("form");
     cardInputContainer.className = "card active";
-
-    this.cardInput = new CardInput(cardInputContainer);
+    this.cardInput = new CardInput(cardInputContainer, { columnId });
     this.bindEvents();
   }
 
@@ -35,6 +32,10 @@ export default class Column extends Component {
     });
 
     on(this.container, "keyup", ({ target }) => {});
+
+    on(this.container, "@newTask", ({ detail }) => {
+      this.store.setState("isOpen", false);
+    });
 
     on(this.container, "click", ({ target }) => {
       if (target.dataset.action === "cancle") {
@@ -57,9 +58,14 @@ export default class Column extends Component {
     return cardComponents;
   }
 
-  render() {
-    const { tasks } = this.todoList[this.columnID];
+  render(todoList) {
+    if (todoList) {
+      this.todoList = todoList;
+    }
+
+    const { tasks } = this.todoList[this.columnId];
     const { isOpen } = this.store.state;
+    this.tasks = tasks;
 
     if (isOpen) {
       this.cardInput.render();
@@ -67,6 +73,7 @@ export default class Column extends Component {
       this.cardInput.store.setState("title", "");
       this.cardInput.store.setState("body", "");
     }
+
     this.container.innerHTML = this.template.getColumnHeader({
       columnName: this.columnName,
       tasks,
@@ -80,6 +87,7 @@ export default class Column extends Component {
     cardWrapper.classList.add("card-wrapper");
     this.container.appendChild(cardWrapper);
 
+    this.cardComponents = this.getCardComponents();
     this.cardComponents.forEach((card) => {
       cardWrapper.appendChild(card.container);
       card.render();

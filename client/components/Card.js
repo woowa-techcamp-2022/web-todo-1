@@ -5,7 +5,6 @@ export default class Card extends Component {
   constructor(container, task) {
     super(container);
     this.task = task;
-    this.template = new Template();
   }
 
   render() {
