@@ -1,10 +1,12 @@
 const express = require("express");
+const path = require("path");
 const createError = require("http-errors");
 // const bodyParser = require("body-parser");
 const pool = require("./model/database");
 
 const app = express();
 app.use(express.json());
+app.use(express.static("dist"));
 
 app.listen(process.env.PORT || "3000", () => {});
 
