@@ -18,7 +18,9 @@ app.get("/todo", (req, res) => {
     const promise = columns.map((column) => {
       todoList[column.ID] = { name: column.TITLE };
       return pool
-        .query(`SELECT * FROM TASKS WHERE LIST_ID=${column.ID}`)
+        .query(
+          `SELECT ID id, TITLE title, BODY body, AUTHOR author FROM TASKS WHERE LIST_ID=${column.ID}`
+        )
         .then((result) => {
           const tasks = result[0];
           todoList[column.ID] = {
