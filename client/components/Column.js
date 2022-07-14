@@ -1,6 +1,7 @@
 import Component from "./Component";
 import Card from "./Card";
-import { createElementWithClass } from "../util";
+import { createElementWithClass, emit } from "../util";
+import { activateDeleteCard, deactivateDeleteCard } from "../util/handler";
 import Store from "../util/Store";
 import CardInput from "./CardInput";
 
@@ -24,21 +25,34 @@ export default class Column extends Component {
   }
 
   bindEvents() {
-    this.on("click", ({ target }) => {
-      if (!target.closest(".btn-plus-icon")) {
-        return;
-      }
+    // column header의 추가 버튼
+    this.on("click", this.toggleCardInput.bind(this))
+      .on("click", this.openModal.bind(this))
+      .on("mouseover", activateDeleteCard)
+      .on("mousemove", deactivateDeleteCard)
+      .on("@newTask", this.setIsModal.bind(this));
+  }
 
-      this.store.setState("isOpen", !this.store.state.isOpen);
-    })
-      .on("@newTask", () => {
-        this.store.setState("isOpen", false);
-      })
-      .on("click", ({ target }) => {
-        if (target.dataset.action === "cancle") {
-          this.store.setState("isOpen", false);
-        }
-      });
+  openModal({ target }) {
+    // card의 삭제 버튼
+    if (target.closest(".btn-delete-icon")) {
+      const card = target.closest(".card");
+      const { columnId } = this.props;
+      const { taskId } = card.dataset;
+      card.classList.remove("delete");
+      emit(this.container, "@openModal", { columnId, taskId });
+    }
+  }
+
+  setIsModal() {
+    this.store.setState("isOpen", !this.store.state.isOpen);
+  }
+
+  toggleCardInput({ target }) {
+    if (!target.closest("[data-action='toggleInput'")) {
+      return;
+    }
+    this.setIsModal();
   }
 
   getCardComponents() {

@@ -40,7 +40,7 @@ export default class Template {
                 <span class="badge">${tasks.length}</span>
               </div>
               <div class="btn-wrapper">
-                <button class="btn-plus-icon">
+                <button class="btn-plus-icon" data-action="toggleInput">
                   <svg
                     class=""
                     width="14"
@@ -88,12 +88,27 @@ export default class Template {
           >${body}</textarea>
         </div>
         <div class="btn-wrapper">
-          <button data-action="cancle" class="normal btn">취소</button>
-          <button data-action="register" class="normal btn">
+          <button data-action="toggleInput" type="button" class="normal btn">취소</button>
+          <button data-action="register" type="submit" class="normal btn">
             등록
           </button>
         </div>
       </div>
+    `;
+  }
+
+  getModal() {
+    return `
+        <div class="modal-wrapper">
+            <div class="modal">
+              선택한 카드를 삭제할까요?
+              <div class="btn-wrapper">
+                <button data-action="cancel" class="normal btn">취소</button>
+                <button data-action="delete" class="accent btn">삭제</button>
+              </div>
+            </div>
+          </div>
+        </div> 
     `;
   }
 }

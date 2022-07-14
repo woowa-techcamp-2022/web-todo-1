@@ -1,8 +1,10 @@
-import { shiftCard } from "../service/TodoService";
+import { removeCard, shiftCard } from "../service/TodoService";
 import Store from "../util/Store";
 import Column from "./Column";
 import Component from "./Component";
 import { data } from "./mockdata";
+import Modal from "./Modal";
+import { createElementWithClass } from "../util";
 
 export default class TodoList extends Component {
   constructor(container, props) {
@@ -14,6 +16,7 @@ export default class TodoList extends Component {
 
     // 상태 저장소 setState를 할 때마다 새로 랜더링한다.
     this.store = new Store(initialState, this.render.bind(this));
+    this.isModalOpen = false;
     this.columnComponents = this.getColumComponents();
 
     this.init();
@@ -21,7 +24,28 @@ export default class TodoList extends Component {
   }
 
   bindEvents() {
-    this.on("@newTask", this.addNewCard.bind(this));
+    this.on("@newTask", this.addNewCard.bind(this))
+      .on("@openModal", this.openModal.bind(this))
+      .on("@deleteTask", this.deleteCard.bind(this));
+  }
+
+  openModal({ detail: { columnId, taskId } }) {
+    const container = createElementWithClass("div", "modal-wrapper");
+    this.container.appendChild(container);
+    const modal = new Modal(container, { columnId, taskId });
+    modal.render();
+  }
+
+  deleteCard({ detail: { columnId, taskId } }) {
+    const { todoList } = this.store.state;
+    const column = todoList[columnId];
+    const { name, tasks } = column;
+    const newTasks = removeCard(taskId, tasks);
+    const newValue = {
+      ...todoList,
+      [columnId]: { name, tasks: newTasks },
+    };
+    this.store.setState("todoList", newValue);
   }
 
   addNewCard({ detail }) {

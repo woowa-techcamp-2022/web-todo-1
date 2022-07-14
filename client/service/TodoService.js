@@ -1,5 +1,5 @@
 export function removeCard(id, tasks) {
-  tasks = tasks.filter((card) => card.id !== id);
+  return tasks.filter((task) => task.id !== Number(id));
 }
 
 /** idx없으면 제일 맨뒤에 넣어준다. */
