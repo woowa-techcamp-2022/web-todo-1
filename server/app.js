@@ -1,4 +1,5 @@
 const express = require("express");
+const createError = require("http-errors");
 // const bodyParser = require("body-parser");
 const pool = require("./model/database");
 
@@ -45,6 +46,7 @@ app.get("/todo", (req, res) => {
     console.log("patch!");
     const { taskId } = req.params;
     const { body } = req.body;
+
     try {
       pool
         .query(
@@ -54,5 +56,12 @@ app.get("/todo", (req, res) => {
     } catch (error) {
       throw new Error(error);
     }
+  });
+  app.use((req, res, next) => {
+    next(createError(404));
+  });
+  app.use((err, req, res, next) => {
+    res.status(err.status || 500);
+    res.json(err);
   });
 });
