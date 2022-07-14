@@ -4,7 +4,9 @@ import Column from "./Column";
 import Component from "./Component";
 import { data } from "./mockdata";
 import Modal from "./Modal";
-import { createElementWithClass } from "../util";
+import { createElementWithClass, isBefore, qs } from "../util";
+
+const MARGIN = 16;
 
 export default class TodoList extends Component {
   constructor(container, props) {
@@ -18,7 +20,10 @@ export default class TodoList extends Component {
     this.store = new Store(initialState, this.render.bind(this));
     this.isModalOpen = false;
     this.columnComponents = this.getColumComponents();
-
+    this.clicked = false;
+    this.grabbedCard = qs(".grab-card", document);
+    this.cloneCard = null;
+    this.originCard = null;
     this.init();
     this.bindEvents();
   }
@@ -27,6 +32,113 @@ export default class TodoList extends Component {
     this.on("@newTask", this.addNewCard.bind(this))
       .on("@openModal", this.openModal.bind(this))
       .on("@deleteTask", this.deleteCard.bind(this));
+
+    window.addEventListener("pointerdown", this.grabCard.bind(this));
+    window.addEventListener("pointermove", this.grabCardMove.bind(this));
+    window.addEventListener("pointerup", this.grabCardDrop.bind(this));
+  }
+
+  grabCardDrop() {
+    if (!this.clicked) {
+      return;
+    }
+
+    this.clicked = false;
+    if (this.originCard) {
+      this.originCard.classList.remove("place");
+    }
+    if (this.cloneCard) {
+      this.cloneCard.remove();
+    }
+
+    this.cloneCard = null;
+    this.originCard = null;
+  }
+
+  grabCardMove({ pageX, pageY }) {
+    if (!this.clicked && !this.cloneCard) {
+      return;
+    }
+
+    this.grabbedCard.hidden = true;
+    let elemBelow = document.elementFromPoint(pageX, pageY);
+    if (elemBelow && elemBelow.classList.contains("card-wrapper")) {
+      elemBelow = document.elementFromPoint(pageX, pageY + MARGIN);
+    }
+    const closestCard = elemBelow.closest(".card");
+    const cardWrapper = elemBelow.closest(".card-wrapper");
+    this.grabbedCard.hidden = false;
+
+    this.grabbedCard.style.transform = `translateX(${
+      pageX - this.grabbedCard.offsetWidth / 2
+    }px) translateY(${pageY - this.grabbedCard.offsetHeight / 2}px)`;
+
+    if (!closestCard) {
+      if (cardWrapper) {
+        const start = qs(".start", cardWrapper);
+
+        const { top } = start.getBoundingClientRect();
+
+        // start보다 현재 커서가 밑에 있으면
+        if (top > pageY) {
+          start.parentNode.insertBefore(
+            this.originCard,
+            start.nextElementSibling
+          );
+        } else {
+          cardWrapper.appendChild(this.originCard);
+        }
+      }
+
+      return;
+    }
+
+    if (
+      isBefore(this.originCard, closestCard) &&
+      closestCard.className !== "start"
+    ) {
+      if (closestCard.classList.contains("active")) {
+        return;
+      }
+      closestCard.parentNode.insertBefore(this.originCard, closestCard);
+    } else if (closestCard.parentNode) {
+      closestCard.parentNode.insertBefore(
+        this.originCard,
+        closestCard.nextSibling
+      );
+    }
+  }
+
+  grabCard({ button, target, pageX, pageY }) {
+    if (target.closest(".btn-delete-icon")) {
+      return;
+    }
+
+    if (target.closest(".card.active")) {
+      return;
+    }
+
+    if (button !== 0) {
+      return;
+    }
+
+    const card = target.closest(".card");
+    this.originCard = card;
+
+    if (!card) {
+      return;
+    }
+
+    this.clicked = true;
+    const cloneCard = card.cloneNode(true);
+    card.classList.add("place");
+    this.cloneCard = cloneCard;
+    cloneCard.classList.add("drag");
+    this.grabbedCard.appendChild(cloneCard);
+
+    this.grabbedCard.style.transform = `translateX(${
+      pageX - this.grabbedCard.offsetWidth / 2
+    }px) translateY(${pageY - this.grabbedCard.offsetHeight / 2}px)`;
   }
 
   openModal({ detail: { columnId, taskId } }) {

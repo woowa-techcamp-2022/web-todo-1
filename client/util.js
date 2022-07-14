@@ -39,3 +39,16 @@ export function createElementWithClass(tagName, className) {
   element.className = className;
   return element;
 }
+
+export function isBefore(element1, element2) {
+  if (element1.parentNode === element2.parentNode) {
+    let cur = element1.previousSibling;
+    while (cur) {
+      if (cur === element2) {
+        return true;
+      }
+      cur = cur.previousSibling;
+    }
+  }
+  return false;
+}

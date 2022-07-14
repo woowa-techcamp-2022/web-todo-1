@@ -126,9 +126,11 @@ body {
 /* Card */
 
 .card-wrapper {
+  min-height: 100%;
 }
 
 .card {
+  user-select: none;
   margin-top: calc(2 * var(--content-margin));
   background-color: white;
   padding: 16px;
@@ -358,4 +360,12 @@ body {
   padding: 10px;
   width: 50%;
   border-radius: 6px;
+}
+
+.grab-card {
+  top: 0;
+  left: 0;
+  position: absolute;
+  width: 350px;
+  transition: ease-in transform;
 }

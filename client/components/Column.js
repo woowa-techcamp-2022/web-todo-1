@@ -93,6 +93,8 @@ export default class Column extends Component {
     });
 
     const cardWrapper = createElementWithClass("div", "card-wrapper");
+    const dragStartContiner = createElementWithClass("div", "start");
+    cardWrapper.appendChild(dragStartContiner);
     this.container.appendChild(cardWrapper);
 
     if (isOpen) {
