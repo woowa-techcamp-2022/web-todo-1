@@ -27,6 +27,9 @@
   --alert-text: 18px;
 
   --content-margin: 8px;
+
+  --title-line-height: 23px;
+  --body-line-height: 20px;
 }
 
 html {
@@ -123,9 +126,11 @@ body {
 /* Card */
 
 .card-wrapper {
+  min-height: 100%;
 }
 
 .card {
+  user-select: none;
   margin-top: calc(2 * var(--content-margin));
   background-color: white;
   padding: 16px;
@@ -141,6 +146,7 @@ body {
 }
 
 .card .title {
+  line-height: var(--title-line-height);
   font-size: var(--card-title-text);
   font-weight: 700;
 }
@@ -148,6 +154,7 @@ body {
 .card .body {
   margin-top: var(--content-margin);
   font-size: var(--card-body-text);
+  line-height: var(--body-line-height);
 }
 .card .caption {
   margin-top: var(--content-margin);
@@ -206,6 +213,7 @@ body {
   background-color: var(--normal-default);
   color: var(--normal-hover);
 }
+
 .btn.accent {
   background-color: var(--accent-default);
   color: white;
@@ -218,6 +226,24 @@ body {
 
 .card.deactive .btn.normal {
   background-color: var(--);
+}
+
+.card.active input {
+  width: 100%;
+  outline: none;
+  border: none;
+  font-weight: 700;
+  font-size: var(--card-title-text);
+}
+
+.card.active textarea {
+  font-size: var(--card-body-text);
+  resize: none;
+  width: 100%;
+  max-height: 341px;
+  overflow-y: visible;
+  outline: none;
+  border: none;
 }
 /* drawer */
 .drawer {
@@ -286,4 +312,60 @@ body {
 .fab svg {
   -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.2));
   filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.2));
+}
+
+.modal-wrapper {
+  background-color: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal {
+  background-color: white;
+  box-shadow: 0px 0px 4px rgba(204, 204, 204, 0.5),
+    0px 2px 4px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(4px);
+  /* Note: backdrop-filter has minimal browser support */
+  border-radius: 6px;
+  width: 400px;
+  height: 138px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.modal .btn-wrapper {
+  margin-top: var(--content-margin);
+  font-size: var(--card-body-text);
+  display: flex;
+}
+
+.modal .btn:first-child {
+  margin-right: 8px;
+}
+
+.modal .btn:last-child {
+  margin-right: 0px;
+}
+
+.modal .btn {
+  padding: 10px;
+  width: 50%;
+  border-radius: 6px;
+}
+
+.grab-card {
+  top: 0;
+  left: 0;
+  position: absolute;
+  width: 350px;
+  transition: ease-in transform;
 }
