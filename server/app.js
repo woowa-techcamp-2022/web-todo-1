@@ -11,7 +11,7 @@ app.get("/todo", (req, res) => {
   const todoList = {};
   pool.query("SELECT * FROM TODO_LIST").then((data) => {
     const [columns] = [...data];
-
+    console.log("get!");
     const promise = columns.map((column) => {
       todoList[column.ID] = { name: column.TITLE };
       return pool
@@ -36,6 +36,21 @@ app.get("/todo", (req, res) => {
           `INSERT INTO TASKS (LIST_ID, TITLE, BODY, AUTHOR, START_DATE, UPDATE_DATE, IS_DELETE) VALUES (${columnId}, "${title}", "${body}", "${author}", NOW(), NOW(), 0)`
         )
         .then((result) => res.json(result[0]));
+    } catch (error) {
+      throw new Error(error);
+    }
+  });
+
+  app.patch("/todo/:taskId", (req, res) => {
+    console.log("patch!");
+    const { taskId } = req.params;
+    const { body } = req.body;
+    try {
+      pool
+        .query(
+          `UPDATE TASKS SET BODY = '${body}' , UPDATE_DATE=NOW()  WHERE ID=${taskId};`
+        )
+        .then((result) => res.json({ success: true }));
     } catch (error) {
       throw new Error(error);
     }
