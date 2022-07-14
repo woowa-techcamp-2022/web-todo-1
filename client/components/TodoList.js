@@ -94,6 +94,10 @@ export default class TodoList extends Component {
       [toColumnId]: { name: toName, tasks: newTasks },
     };
     this.store.setState("todoList", newValue);
+
+    return new Promise((resolve, reject) => {
+      resolve("서버에 저장하지 않음");
+    });
   }
 
   grabCardDrop() {
@@ -287,7 +291,6 @@ export default class TodoList extends Component {
   }
 
   render() {
-    console.log(`render`, this.store.state);
     const { todoList } = this.store.state;
     if (!todoList) {
       return;
