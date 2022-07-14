@@ -46,21 +46,27 @@ app.get("/todo", (req, res) => {
     }
   });
 
+  /** action 타입을 정해야할 거 같습니다. 액션에 따라서 다른 행동을 하고 log도 그에 맞게 기록되어야할 듯 합니다.
+   */
   app.patch("/todo/:taskId", (req, res) => {
     console.log("patch!");
     const { taskId } = req.params;
-    const { body } = req.body;
+    const { body, actionType, toColumnId } = req.body;
+
+    const queryMap = {
+      update: `UPDATE TASKS SET BODY = '${body}' , UPDATE_DATE=NOW()  WHERE ID=${taskId};`,
+      move: `UPDATE TASKS SET LIST_ID = '${toColumnId}' , UPDATE_DATE=NOW()  WHERE ID=${taskId};`,
+    };
+
+    const queryStatement = queryMap[actionType];
 
     try {
-      pool
-        .query(
-          `UPDATE TASKS SET BODY = '${body}' , UPDATE_DATE=NOW()  WHERE ID=${taskId};`
-        )
-        .then((result) => res.json({ success: true }));
+      pool.query(queryStatement).then((result) => res.json({ success: true }));
     } catch (error) {
       throw new Error(error);
     }
   });
+
   app.use((req, res, next) => {
     next(createError(404));
   });
