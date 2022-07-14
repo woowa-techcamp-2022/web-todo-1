@@ -14,12 +14,11 @@ app.get("/todo", (req, res) => {
   const todoList = {};
   pool.query("SELECT * FROM TODO_LIST").then((data) => {
     const [columns] = [...data];
-    console.log("get!");
     const promise = columns.map((column) => {
       todoList[column.ID] = { name: column.TITLE };
       return pool
         .query(
-          `SELECT ID id, TITLE title, BODY body, AUTHOR author FROM TASKS WHERE LIST_ID=${column.ID}`
+          `SELECT ID id, TITLE title, BODY body, AUTHOR author FROM TASKS WHERE LIST_ID=${column.ID} AND IS_DELETE = 0 ORDER BY START_DATE DESC`
         )
         .then((result) => {
           const tasks = result[0];
@@ -57,7 +56,6 @@ app.get("/todo", (req, res) => {
   });
 
   app.patch("/todo/:taskId", (req, res) => {
-    console.log("patch!");
     const { taskId } = req.params;
     const { body, actionType, toColumnId } = req.body;
 
@@ -78,6 +76,7 @@ app.get("/todo", (req, res) => {
   app.use((req, res, next) => {
     next(createError(404));
   });
+
   app.use((err, req, res, next) => {
     res.status(err.status || 500);
     res.json(err);

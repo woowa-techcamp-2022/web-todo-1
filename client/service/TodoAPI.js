@@ -21,20 +21,28 @@ class TodoAPI {
   }
 
   makeNewTask(task) {
-    const requestOption = {
-      method: "POST",
-      headers: { "Content-Type": "application/json;charset=utf-8" },
-      body: JSON.stringify(task),
-    };
+    try {
+      const requestOption = {
+        method: "POST",
+        headers: { "Content-Type": "application/json;charset=utf-8" },
+        body: JSON.stringify(task),
+      };
 
-    return fetch(this.BASEURL, requestOption);
+      return fetch(this.BASEURL, requestOption).then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   moveTask({ taskId, toColumnId }) {
     const requestOption = {
       method: "PATCH",
       headers: { "Content-Type": "application/json;charset=utf-8" },
-      body: JSON.stringify({ toColumnId }),
+      body: JSON.stringify({ actionType: "move", toColumnId }),
     };
 
     return fetch(`${this.BASEURL}/${taskId}`, requestOption);
@@ -51,11 +59,21 @@ class TodoAPI {
   }
 
   deleteTask(taskId) {
-    const requestOption = {
-      method: "DELETE",
-    };
+    try {
+      const requestOption = {
+        method: "DELETE",
+      };
 
-    return fetch(`${this.BASEURL}/${taskId}`, requestOption);
+      return fetch(`${this.BASEURL}/${taskId}`, requestOption).then(
+        (response) => {
+          if (response.ok) {
+            return response.json();
+          }
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
 

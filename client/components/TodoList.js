@@ -11,6 +11,7 @@ import Component from "./Component";
 import { data } from "./mockdata";
 import Modal from "./Modal";
 import { createElementWithClass, isBefore, qs } from "../util";
+import TodoAPI from "../service/TodoAPI";
 
 const MARGIN = 16;
 
@@ -71,25 +72,28 @@ export default class TodoList extends Component {
       const newFromTasks = removeCard(this.fromTaskId, fromTasks);
       const newToTasks = insertCard(toTasks, fromTask, toIdx);
 
-      this.store.setState("todoList", {
-        ...todoList,
-        [this.fromColumnId]: { name: fromName, tasks: newFromTasks },
-        [toColumnId]: { name: toName, tasks: newToTasks },
-      });
-    } else {
-      // state index
-      const fromIdx = toTasks.findIndex(
-        (task) => task.id === Number(this.fromTaskId)
+      return TodoAPI.moveTask({ taskId: this.fromTaskId, toColumnId }).then(
+        (result) => {
+          this.store.setState("todoList", {
+            ...todoList,
+            [this.fromColumnId]: { name: fromName, tasks: newFromTasks },
+            [toColumnId]: { name: toName, tasks: newToTasks },
+          });
+        }
       );
-
-      const newTasks = moveCard(fromIdx, toIdx, toTasks);
-
-      const newValue = {
-        ...todoList,
-        [toColumnId]: { name: toName, tasks: newTasks },
-      };
-      this.store.setState("todoList", newValue);
     }
+    // state index
+    const fromIdx = toTasks.findIndex(
+      (task) => task.id === Number(this.fromTaskId)
+    );
+
+    const newTasks = moveCard(fromIdx, toIdx, toTasks);
+
+    const newValue = {
+      ...todoList,
+      [toColumnId]: { name: toName, tasks: newTasks },
+    };
+    this.store.setState("todoList", newValue);
   }
 
   grabCardDrop() {
@@ -105,9 +109,9 @@ export default class TodoList extends Component {
 
     const targetColumn = this.originCard.closest(".column");
 
-    this.updateColumn(targetColumn);
-
-    this.resetDrag();
+    this.updateColumn(targetColumn).then(() => {
+      this.resetDrag();
+    });
   }
 
   resetDrag() {
@@ -227,12 +231,15 @@ export default class TodoList extends Component {
     const { todoList } = this.store.state;
     const column = todoList[columnId];
     const { name, tasks } = column;
-    const newTasks = removeCard(taskId, tasks);
-    const newValue = {
-      ...todoList,
-      [columnId]: { name, tasks: newTasks },
-    };
-    this.store.setState("todoList", newValue);
+
+    TodoAPI.deleteTask(taskId).then((result) => {
+      const newTasks = removeCard(taskId, tasks);
+      const newValue = {
+        ...todoList,
+        [columnId]: { name, tasks: newTasks },
+      };
+      this.store.setState("todoList", newValue);
+    });
   }
 
   addNewCard({ detail }) {
@@ -243,12 +250,16 @@ export default class TodoList extends Component {
 
     const newTasks = shiftCard({ ...card, id: 2 }, tasks);
 
-    const newValue = {
-      ...todoList,
-      [columnId]: { name, tasks: newTasks },
-    };
+    try {
+      TodoAPI.makeNewTask(detail).then((result) => {
+        const newValue = {
+          ...todoList,
+          [columnId]: { name, tasks: newTasks },
+        };
 
-    this.store.setState("todoList", newValue);
+        this.store.setState("todoList", newValue);
+      });
+    } catch (error) {}
   }
 
   getColumComponents() {
@@ -276,6 +287,7 @@ export default class TodoList extends Component {
   }
 
   render() {
+    console.log(`render`, this.store.state);
     const { todoList } = this.store.state;
     if (!todoList) {
       return;
