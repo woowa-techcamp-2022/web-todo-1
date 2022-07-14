@@ -19,14 +19,15 @@ export default class TodoList extends Component {
     super(container, props);
 
     const initialState = {
-      todoList: data,
+      todoList: props.todoList,
     };
 
     // 상태 저장소 setState를 할 때마다 새로 랜더링한다.
     this.store = new Store(initialState, this.render.bind(this));
     this.isModalOpen = false;
-    this.columnComponents = this.getColumComponents();
+    this.columnComponents = null;
     this.clicked = false;
+    this.columnComponents = this.getColumComponents();
 
     this.grabbedCard = qs(".grab-card", document);
     this.cloneCard = null;
@@ -34,8 +35,12 @@ export default class TodoList extends Component {
     this.fromColumnId = null;
     this.fromTaskId = null;
 
-    this.init();
     this.bindEvents();
+    this.init();
+  }
+
+  init() {
+    this.render();
   }
 
   bindEvents() {
@@ -272,13 +277,11 @@ export default class TodoList extends Component {
 
   render() {
     const { todoList } = this.store.state;
+    if (!todoList) {
+      return;
+    }
     this.columnComponents.forEach((columnComponent) => {
       columnComponent.render(todoList);
     });
-  }
-
-  init() {
-    // DB에서
-    this.render();
   }
 }

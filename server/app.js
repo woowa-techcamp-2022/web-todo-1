@@ -1,9 +1,12 @@
 const express = require("express");
+const path = require("path");
+const createError = require("http-errors");
 // const bodyParser = require("body-parser");
 const pool = require("./model/database");
 
 const app = express();
 app.use(express.json());
+app.use(express.static("dist"));
 
 app.listen(process.env.PORT || "3000", () => {});
 
@@ -15,7 +18,9 @@ app.get("/todo", (req, res) => {
     const promise = columns.map((column) => {
       todoList[column.ID] = { name: column.TITLE };
       return pool
-        .query(`SELECT * FROM TASKS WHERE LIST_ID=${column.ID}`)
+        .query(
+          `SELECT ID id, TITLE title, BODY body, AUTHOR author FROM TASKS WHERE LIST_ID=${column.ID}`
+        )
         .then((result) => {
           const tasks = result[0];
           todoList[column.ID] = {
@@ -45,6 +50,7 @@ app.get("/todo", (req, res) => {
     console.log("patch!");
     const { taskId } = req.params;
     const { body } = req.body;
+
     try {
       pool
         .query(
@@ -54,5 +60,12 @@ app.get("/todo", (req, res) => {
     } catch (error) {
       throw new Error(error);
     }
+  });
+  app.use((req, res, next) => {
+    next(createError(404));
+  });
+  app.use((err, req, res, next) => {
+    res.status(err.status || 500);
+    res.json(err);
   });
 });

@@ -20,7 +20,13 @@ function App() {
   const todoListContainer = qs(".todo-list-wrapper");
   const actionStackContainer = qs(".action-stack");
 
-  const todoList = new TodoList(todoListContainer);
+  fetch("/todo")
+    .then((result) => result.json())
+    .then((result) => {
+      console.log(result);
+      const todoList = result;
+      const todoListComponent = new TodoList(todoListContainer, { todoList });
+    });
 
   // todoList 인스턴스를 만들어서 초기화
   // actionStack 인스턴스를 만들고 초기화
