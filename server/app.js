@@ -1,7 +1,9 @@
 const express = require("express");
+// const bodyParser = require("body-parser");
 const pool = require("./model/database");
 
 const app = express();
+app.use(express.json());
 
 app.listen(process.env.PORT || "3000", () => {});
 
@@ -24,5 +26,18 @@ app.get("/todo", (req, res) => {
     });
 
     Promise.all(promise).then(() => res.json(todoList));
+  });
+
+  app.post("/todo", (req, res) => {
+    const { columnId, title, body, author } = req.body;
+    try {
+      pool
+        .query(
+          `INSERT INTO TASKS (LIST_ID, TITLE, BODY, AUTHOR, START_DATE, UPDATE_DATE, IS_DELETE) VALUES (${columnId}, "${title}", "${body}", "${author}", NOW(), NOW(), 0)`
+        )
+        .then((result) => res.json(result[0]));
+    } catch (error) {
+      throw new Error(error);
+    }
   });
 });
