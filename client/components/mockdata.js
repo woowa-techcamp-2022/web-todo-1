@@ -38,31 +38,31 @@ export const data = {
     name: "하는 중",
     tasks: [
       {
-        id: 1,
+        id: 6,
         title: "Github 공부하기1",
         body: "- commit, push, add",
         author: "연정",
       },
       {
-        id: 2,
+        id: 7,
         title: "Github 공부하기2",
         body: "- commit, push, add",
         author: "연정",
       },
       {
-        id: 3,
+        id: 8,
         title: "Github 공부하기3",
         body: "- commit, push, add",
         author: "연정",
       },
       {
-        id: 4,
+        id: 9,
         title: "Github 공부하기4",
         body: "- commit, push, add",
         author: "연정",
       },
       {
-        id: 5,
+        id: 10,
         title: "Github 공부하기5",
         body: "- commit, push, add",
         author: "연정",
@@ -73,13 +73,13 @@ export const data = {
     name: "완성된 일",
     tasks: [
       {
-        id: 1,
+        id: 11,
         title: "Github 공부하기1",
         body: "- commit, push, add",
         author: "연정",
       },
       {
-        id: 2,
+        id: 12,
         title: "Github 공부하기2",
         body: "- commit, push, add",
         author: "연정",

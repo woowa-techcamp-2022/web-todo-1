@@ -1,4 +1,10 @@
-import { removeCard, shiftCard } from "../service/TodoService";
+import {
+  moveCard,
+  removeCard,
+  shiftCard,
+  getCurrentTaskIds,
+  insertCard,
+} from "../service/TodoService";
 import Store from "../util/Store";
 import Column from "./Column";
 import Component from "./Component";
@@ -21,9 +27,13 @@ export default class TodoList extends Component {
     this.isModalOpen = false;
     this.columnComponents = this.getColumComponents();
     this.clicked = false;
+
     this.grabbedCard = qs(".grab-card", document);
     this.cloneCard = null;
     this.originCard = null;
+    this.fromColumnId = null;
+    this.fromTaskId = null;
+
     this.init();
     this.bindEvents();
   }
@@ -38,21 +48,71 @@ export default class TodoList extends Component {
     window.addEventListener("pointerup", this.grabCardDrop.bind(this));
   }
 
+  updateColumn(targetColumn) {
+    //* *  실제 view에서 먼저 변한 순서를 담고있습니다. */
+    const taskCurrentIds = getCurrentTaskIds(targetColumn);
+    // 실제 index
+    const toIdx = taskCurrentIds.findIndex((id) => id === this.fromTaskId);
+
+    const { todoList } = this.store.state;
+    const { columnId: toColumnId } = targetColumn.dataset;
+    const { name: toName, tasks: toTasks } = todoList[toColumnId];
+    const { name: fromName, tasks: fromTasks } = todoList[this.fromColumnId];
+
+    if (this.fromColumnId !== toColumnId) {
+      const fromTask = fromTasks.find(
+        (task) => task.id === Number(this.fromTaskId)
+      );
+      const newFromTasks = removeCard(this.fromTaskId, fromTasks);
+      const newToTasks = insertCard(toTasks, fromTask, toIdx);
+
+      this.store.setState("todoList", {
+        ...todoList,
+        [this.fromColumnId]: { name: fromName, tasks: newFromTasks },
+        [toColumnId]: { name: toName, tasks: newToTasks },
+      });
+    } else {
+      // state index
+      const fromIdx = toTasks.findIndex(
+        (task) => task.id === Number(this.fromTaskId)
+      );
+
+      const newTasks = moveCard(fromIdx, toIdx, toTasks);
+
+      const newValue = {
+        ...todoList,
+        [toColumnId]: { name: toName, tasks: newTasks },
+      };
+      this.store.setState("todoList", newValue);
+    }
+  }
+
   grabCardDrop() {
     if (!this.clicked) {
       return;
     }
 
     this.clicked = false;
+
     if (this.originCard) {
       this.originCard.classList.remove("place");
     }
+
+    const targetColumn = this.originCard.closest(".column");
+
+    this.updateColumn(targetColumn);
+
+    this.resetDrag();
+  }
+
+  resetDrag() {
     if (this.cloneCard) {
       this.cloneCard.remove();
     }
 
     this.cloneCard = null;
     this.originCard = null;
+    this.fromColumnId = null;
   }
 
   grabCardMove({ pageX, pageY }) {
@@ -122,7 +182,17 @@ export default class TodoList extends Component {
       return;
     }
 
+    if (!target.closest(".card")) {
+      return;
+    }
+
     const card = target.closest(".card");
+    const column = card.closest(".column");
+    const { columnId } = column.dataset;
+    const { taskId } = card.dataset;
+    this.fromColumnId = columnId;
+    this.fromTaskId = taskId;
+
     this.originCard = card;
 
     if (!card) {
