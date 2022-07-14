@@ -1,10 +1,9 @@
 import { shiftCard } from "../service/TodoService";
-import { qs, on } from "../util";
 import Store from "../util/Store";
 import Column from "./Column";
 import Component from "./Component";
 import { data } from "./mockdata";
-import Template from "./Template";
+
 export default class TodoList extends Component {
   constructor(container, props) {
     super(container, props);
@@ -22,25 +21,29 @@ export default class TodoList extends Component {
   }
 
   bindEvents() {
-    on(this.container, "@newTask", ({ detail }) => {
-      const todoList = this.store.state["todoList"];
-      const { columnId, ...card } = detail;
-      const column = todoList[columnId];
-      const { name, tasks } = column;
-
-      const newTasks = shiftCard({ ...card, id: 2 }, tasks);
-
-      const newValue = {
-        ...todoList,
-        [columnId]: { name, tasks: newTasks },
-      };
-
-      this.store.setState("todoList", newValue);
-    });
+    this.on("@newTask", this.addNewCard.bind(this));
   }
+
+  addNewCard({ detail }) {
+    const { todoList } = this.store.state;
+    const { columnId, ...card } = detail;
+    const column = todoList[columnId];
+    const { name, tasks } = column;
+
+    const newTasks = shiftCard({ ...card, id: 2 }, tasks);
+
+    const newValue = {
+      ...todoList,
+      [columnId]: { name, tasks: newTasks },
+    };
+
+    this.store.setState("todoList", newValue);
+  }
+
   getColumComponents() {
     const columnComponents = [];
-    const todoList = this.store.state["todoList"];
+    const { todoList } = this.store.state;
+
     Object.keys(todoList).forEach((columnId) => {
       const container = document.createElement("div");
       this.container.appendChild(container);
@@ -50,8 +53,8 @@ export default class TodoList extends Component {
 
       // todoKey는 한일,끝마친 일, 이런 식으로 들어간다.
       const newColumn = new Column(container, {
-        columnId: columnId,
-        columnName: todoList[columnId]["name"],
+        columnId,
+        columnName: todoList[columnId].name,
         todoList,
       });
 
@@ -63,7 +66,6 @@ export default class TodoList extends Component {
 
   render() {
     const { todoList } = this.store.state;
-    console.log(todoList);
     this.columnComponents.forEach((columnComponent) => {
       columnComponent.render(todoList);
     });

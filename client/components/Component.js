@@ -1,4 +1,5 @@
 import Template from "./Template";
+import { on } from "../util";
 
 export default class Component {
   constructor(container, props) {
@@ -8,7 +9,8 @@ export default class Component {
     this.template = new Template();
   }
 
-  render() {}
-
-  init() {}
+  on(eventName, handler) {
+    on(this.container, eventName, handler);
+    return this;
+  }
 }

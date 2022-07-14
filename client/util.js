@@ -33,3 +33,9 @@ export function emit(target, eventName, detail) {
   const event = new CustomEvent(eventName, { detail, bubbles: true });
   target.dispatchEvent(event);
 }
+
+export function createElementWithClass(tagName, className) {
+  const element = document.createElement(tagName);
+  element.className = className;
+  return element;
+}

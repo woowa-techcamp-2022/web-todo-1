@@ -1,5 +1,4 @@
 import Component from "./Component";
-import Template from "./Template";
 
 export default class Card extends Component {
   constructor(container, task) {

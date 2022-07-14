@@ -26,7 +26,7 @@ export default class Template {
           </button>
         </div>
         <div class="body">
-          <p>${body}</p>
+          <p>${body.replace(/\n/g, "<br/>")}</p>
         </div>
         <div class="caption">${author}</div>
       `;
@@ -73,6 +73,7 @@ export default class Template {
             </div>
          `;
   }
+
   getCardInput({ title, body }) {
     return `
         <form class="card active">
