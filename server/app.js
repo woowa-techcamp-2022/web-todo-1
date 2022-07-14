@@ -46,21 +46,35 @@ app.get("/todo", (req, res) => {
     }
   });
 
-  app.patch("/todo/:taskId", (req, res) => {
-    console.log("patch!");
+  app.delete("/todo/:taskId", (req, res) => {
     const { taskId } = req.params;
-    const { body } = req.body;
-
+    const queryStatement = `UPDATE TASKS SET IS_DELETE = 1 , UPDATE_DATE=NOW()  WHERE ID=${taskId};`;
     try {
-      pool
-        .query(
-          `UPDATE TASKS SET BODY = '${body}' , UPDATE_DATE=NOW()  WHERE ID=${taskId};`
-        )
-        .then((result) => res.json({ success: true }));
+      pool.query(queryStatement).then((result) => res.json({ success: true }));
     } catch (error) {
       throw new Error(error);
     }
   });
+
+  app.patch("/todo/:taskId", (req, res) => {
+    console.log("patch!");
+    const { taskId } = req.params;
+    const { body, actionType, toColumnId } = req.body;
+
+    const queryMap = {
+      update: `UPDATE TASKS SET BODY = '${body}' , UPDATE_DATE=NOW()  WHERE ID=${taskId};`,
+      move: `UPDATE TASKS SET LIST_ID = '${toColumnId}' , UPDATE_DATE=NOW()  WHERE ID=${taskId};`,
+    };
+
+    const queryStatement = queryMap[actionType];
+
+    try {
+      pool.query(queryStatement).then((result) => res.json({ success: true }));
+    } catch (error) {
+      throw new Error(error);
+    }
+  });
+
   app.use((req, res, next) => {
     next(createError(404));
   });

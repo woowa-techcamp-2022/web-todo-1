@@ -2,6 +2,7 @@ import "./reset.css";
 import "./style.css";
 import { qs } from "./util";
 import TodoList from "./components/TodoList";
+import TodoAPI from "./service/TodoAPI";
 
 const menuBtn = document.querySelector(".menu");
 const drawer = document.querySelector(".drawer");
@@ -20,16 +21,9 @@ function App() {
   const todoListContainer = qs(".todo-list-wrapper");
   const actionStackContainer = qs(".action-stack");
 
-  fetch("/todo")
-    .then((result) => result.json())
-    .then((result) => {
-      console.log(result);
-      const todoList = result;
-      const todoListComponent = new TodoList(todoListContainer, { todoList });
-    });
-
-  // todoList 인스턴스를 만들어서 초기화
-  // actionStack 인스턴스를 만들고 초기화
+  TodoAPI.getTodoList().then(
+    (todoList) => new TodoList(todoListContainer, { todoList })
+  );
 }
 
 const app = new App();
