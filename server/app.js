@@ -92,6 +92,41 @@ app.get("/todo", (req, res) => {
     }
   });
 
+  app.get("/history", (req, res) => {
+    try {
+      const queryStatement = `SELECT B.TITLE as title, 
+                                CASE
+                                  WHEN A.ACTION_TYPE = 1
+                                THEN '등록'
+                                WHEN A.ACTION_TYPE = 2
+                                THEN '삭제'
+                                WHEN A.ACTION_TYPE = 3
+                                  THEN '변경'
+                                WHEN A.ACTION_TYPE = 4
+                                  THEN '이동'
+                                END as actionTypeName,
+                                A.ACTION_TYPE as actionType,
+                                C.TITLE  as fromColumnTitle,
+                                D.TITLE as toColumnTitle,
+                                B.AUTHOR  as author
+                          FROM HISTORY A 
+                          INNER JOIN TASKS B
+                            ON A.TASK_ID = B.ID 
+                          LEFT JOIN TODO_LIST C
+                            ON A.FROM_LIST_ID = C.ID
+                          LEFT JOIN TODO_LIST D
+                            ON A.TO_LIST_ID = D.ID
+                          ORDER BY A.START_DATE DESC`;
+
+      pool.query(queryStatement).then((result) => {
+        const [history] = result;
+        res.json(history);
+      });
+    } catch (error) {
+      throw new Error(error);
+    }
+  });
+
   app.use((req, res, next) => {
     next(createError(404));
   });

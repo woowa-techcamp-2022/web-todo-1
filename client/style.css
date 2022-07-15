@@ -251,6 +251,7 @@ body {
   right: 0;
   top: 0;
   width: 452px;
+  overflow-y: scroll;
   height: 100%;
   background-color: white;
   transform: translateX(100%);
@@ -271,8 +272,8 @@ body {
   transform: translateX(0%);
 }
 
-/* Action Stack */
-.action-stack {
+/* History */
+.history {
   font-size: var(--action-body-text);
 }
 
