@@ -72,15 +72,17 @@ export default class TodoList extends Component {
       const newFromTasks = removeCard(this.fromTaskId, fromTasks);
       const newToTasks = insertCard(toTasks, fromTask, toIdx);
 
-      return TodoAPI.moveTask({ taskId: this.fromTaskId, toColumnId }).then(
-        (result) => {
-          this.store.setState("todoList", {
-            ...todoList,
-            [this.fromColumnId]: { name: fromName, tasks: newFromTasks },
-            [toColumnId]: { name: toName, tasks: newToTasks },
-          });
-        }
-      );
+      return TodoAPI.moveTask({
+        taskId: this.fromTaskId,
+        fromColumnId: this.fromColumnId,
+        toColumnId,
+      }).then((result) => {
+        this.store.setState("todoList", {
+          ...todoList,
+          [this.fromColumnId]: { name: fromName, tasks: newFromTasks },
+          [toColumnId]: { name: toName, tasks: newToTasks },
+        });
+      });
     }
     // state index
     const fromIdx = toTasks.findIndex(

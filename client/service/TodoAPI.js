@@ -38,11 +38,11 @@ class TodoAPI {
     }
   }
 
-  moveTask({ taskId, toColumnId }) {
+  moveTask({ taskId, fromColumnId, toColumnId }) {
     const requestOption = {
       method: "PATCH",
       headers: { "Content-Type": "application/json;charset=utf-8" },
-      body: JSON.stringify({ actionType: "move", toColumnId }),
+      body: JSON.stringify({ actionType: "move", fromColumnId, toColumnId }),
     };
 
     return fetch(`${this.BASEURL}/${taskId}`, requestOption);

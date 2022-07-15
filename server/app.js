@@ -12,6 +12,7 @@ app.listen(process.env.PORT || "3000", () => {});
 
 app.get("/todo", (req, res) => {
   const todoList = {};
+  // todoList를 db에서 가져온다.
   pool.query("SELECT * FROM TODO_LIST").then((data) => {
     const [columns] = [...data];
     const promise = columns.map((column) => {
@@ -33,13 +34,20 @@ app.get("/todo", (req, res) => {
   });
 
   app.post("/todo", (req, res) => {
+    // todoList task저장
     const { columnId, title, body, author } = req.body;
     try {
       pool
         .query(
           `INSERT INTO TASKS (LIST_ID, TITLE, BODY, AUTHOR, START_DATE, UPDATE_DATE, IS_DELETE) VALUES (${columnId}, "${title}", "${body}", "${author}", NOW(), NOW(), 0)`
         )
-        .then((result) => res.json(result[0]));
+        .then((result) => {
+          const { insertId: taskId } = result[0];
+          const logQuery = `INSERT INTO HISTORY (TASK_ID, ACTION_TYPE, FROM_LIST_ID, START_DATE, UPDATE_DATE) VALUES (${taskId}, 1, ${columnId}, NOW(), NOW())`;
+          pool.query(logQuery).then(() => {
+            res.json(result[0]);
+          });
+        });
     } catch (error) {
       throw new Error(error);
     }
@@ -47,9 +55,15 @@ app.get("/todo", (req, res) => {
 
   app.delete("/todo/:taskId", (req, res) => {
     const { taskId } = req.params;
+
     const queryStatement = `UPDATE TASKS SET IS_DELETE = 1 , UPDATE_DATE=NOW()  WHERE ID=${taskId};`;
     try {
-      pool.query(queryStatement).then((result) => res.json({ success: true }));
+      pool.query(queryStatement).then((result) => {
+        const logQuery = `INSERT INTO HISTORY (TASK_ID, ACTION_TYPE, START_DATE, UPDATE_DATE) VALUES (${taskId}, 2, NOW(), NOW())`;
+        pool.query(logQuery).then(() => {
+          res.json({ success: true });
+        });
+      });
     } catch (error) {
       throw new Error(error);
     }
@@ -57,7 +71,7 @@ app.get("/todo", (req, res) => {
 
   app.patch("/todo/:taskId", (req, res) => {
     const { taskId } = req.params;
-    const { body, actionType, toColumnId } = req.body;
+    const { body, actionType, fromColumnId, toColumnId } = req.body;
 
     const queryMap = {
       update: `UPDATE TASKS SET BODY = '${body}' , UPDATE_DATE=NOW()  WHERE ID=${taskId};`,
@@ -67,7 +81,12 @@ app.get("/todo", (req, res) => {
     const queryStatement = queryMap[actionType];
 
     try {
-      pool.query(queryStatement).then((result) => res.json({ success: true }));
+      pool.query(queryStatement).then(() => {
+        const logQuery = `INSERT INTO HISTORY (TASK_ID, ACTION_TYPE, FROM_LIST_ID, TO_LIST_ID, START_DATE, UPDATE_DATE) VALUES (${taskId}, 4, ${fromColumnId}, ${toColumnId}, NOW(), NOW())`;
+        pool.query(logQuery).then(() => {
+          res.json({ success: true });
+        });
+      });
     } catch (error) {
       throw new Error(error);
     }
