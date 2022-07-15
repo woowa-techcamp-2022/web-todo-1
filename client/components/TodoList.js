@@ -8,7 +8,6 @@ import {
 import Store from "../util/Store";
 import Column from "./Column";
 import Component from "./Component";
-import { data } from "./mockdata";
 import Modal from "./Modal";
 import { createElementWithClass, isBefore, qs } from "../util";
 import TodoAPI from "../service/TodoAPI";
@@ -25,23 +24,24 @@ export default class TodoList extends Component {
 
     // 상태 저장소 setState를 할 때마다 새로 랜더링한다.
     this.store = new Store(initialState, this.render.bind(this));
-    this.isModalOpen = false;
-    this.columnComponents = null;
-    this.clicked = false;
     this.columnComponents = this.getColumComponents();
 
+    this.isModalOpen = false;
+
+    // drag and drop state
+
+    this.init();
+  }
+
+  init() {
+    this.isPoninterDown = false;
     this.grabbedCard = qs(".grab-card", document);
     this.cloneCard = null;
     this.originCard = null;
     this.fromColumnId = null;
     this.fromTaskId = null;
-
-    this.bindEvents();
-    this.init();
-  }
-
-  init() {
     this.render();
+    this.bindEvents();
   }
 
   bindEvents() {
@@ -57,7 +57,7 @@ export default class TodoList extends Component {
   updateColumn(targetColumn) {
     //* *  실제 view에서 먼저 변한 순서를 담고있습니다. */
     const taskCurrentIds = getCurrentTaskIds(targetColumn);
-    // 실제 index
+    // 실제 view에서의 index를 찾습니다.
     const toIdx = taskCurrentIds.findIndex((id) => id === this.fromTaskId);
 
     const { todoList } = this.store.state;
@@ -101,11 +101,11 @@ export default class TodoList extends Component {
   }
 
   grabCardDrop() {
-    if (!this.clicked) {
+    if (!this.isPoninterDown) {
       return;
     }
 
-    this.clicked = false;
+    this.isPoninterDown = false;
 
     if (this.originCard) {
       this.originCard.classList.remove("place");
@@ -128,17 +128,18 @@ export default class TodoList extends Component {
     this.fromColumnId = null;
   }
 
-  grabCardMove({ pageX, pageY }) {
-    if (!this.clicked && !this.cloneCard) {
+  grabCardMove({ pageX, pageY, clientX, clientY }) {
+    if (!this.isPoninterDown && !this.cloneCard) {
       return;
     }
 
     this.grabbedCard.hidden = true;
-    let elemBelow = document.elementFromPoint(pageX, pageY);
+    let elemBelow = document.elementFromPoint(clientX, clientY);
     if (elemBelow && elemBelow.classList.contains("card-wrapper")) {
-      elemBelow = document.elementFromPoint(pageX, pageY + MARGIN);
+      elemBelow = document.elementFromPoint(clientX, clientY + MARGIN);
     }
     const closestCard = elemBelow.closest(".card");
+
     const cardWrapper = elemBelow.closest(".card-wrapper");
     this.grabbedCard.hidden = false;
 
@@ -212,7 +213,7 @@ export default class TodoList extends Component {
       return;
     }
 
-    this.clicked = true;
+    this.isPoninterDown = true;
     const cloneCard = card.cloneNode(true);
     card.classList.add("place");
     this.cloneCard = cloneCard;
@@ -291,6 +292,7 @@ export default class TodoList extends Component {
   }
 
   render() {
+    console.log("render");
     const { todoList } = this.store.state;
     if (!todoList) {
       return;
