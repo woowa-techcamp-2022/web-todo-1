@@ -6,8 +6,6 @@ export function removeCard(id, tasks) {
 
 /** idx없으면 제일 맨뒤에 넣어준다. */
 export function insertCard(tasks, card, idx) {
-  // eslint-disable-next-line no-param-reassign
-  idx = idx || tasks.length;
   return [...tasks.slice(0, idx), card, ...tasks.slice(idx)];
 }
 
