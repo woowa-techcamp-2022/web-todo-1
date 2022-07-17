@@ -106,7 +106,8 @@ app.get("/todo", (req, res) => {
                                 A.ACTION_TYPE as actionType,
                                 C.TITLE  as fromColumnTitle,
                                 D.TITLE as toColumnTitle,
-                                B.AUTHOR  as author
+                                B.AUTHOR  as author,
+                                A.START_DATE as startDate
                           FROM HISTORY A 
                           INNER JOIN TASKS B
                             ON A.TASK_ID = B.ID 

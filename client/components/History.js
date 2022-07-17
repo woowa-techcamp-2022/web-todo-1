@@ -1,5 +1,6 @@
 import Component from "./Component";
 import Store from "../util/Store";
+import { formatRelativeDate } from "../util";
 
 /**
  * props : columnName, columnId, todoList
@@ -31,7 +32,9 @@ export default class History extends Component {
               <div class="body">
                 ${actionTypeMap[item.actionType](item)}
               </div>
-              <div class="time-stamp">1분전</div>
+              <div class="time-stamp">
+                ${formatRelativeDate(item.startDate)}
+              </div>
             </div>
           </li>
         `;
