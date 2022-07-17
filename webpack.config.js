@@ -1,9 +1,10 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-module.exports = {
+module.exports = /** @type { import('webpack').Configuration } */ ({
   mode: "development",
   entry: "./client/app.js",
+  devtool: "eval-cheap-source-map",
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
@@ -48,9 +49,11 @@ module.exports = {
     }),
   ],
   devServer: {
+    proxy: { "/": "http://localhost:3000" },
     client: { overlay: true, logging: "error" },
     port: 8081,
+    watchFiles: ["client/*.html"],
     hot: true,
     historyApiFallback: true,
   },
-};
+});
