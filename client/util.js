@@ -60,7 +60,6 @@ export function formatRelativeDate(date = new Date()) {
   const A_DAY = 24 * A_HOUR;
 
   const diff = new Date() - new Date(date);
-  console.log(new Date(date));
 
   if (diff < TEN_SECOND) return `방금 전`;
   if (diff < A_MINUTE) return `${Math.floor(diff / 1000)}초 전`;
