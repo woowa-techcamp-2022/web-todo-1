@@ -79,12 +79,12 @@ export default class Template {
         <form class="card active">
         <div class="header">
           <div class="title">
-            <input required name="title" placeholder="제목을 입력하세요" id="title" value=${title}></input>
+            <input required name="title" placeholder="제목을 입력하세요" autofocus id="title" value=${title}></input>
           </div>
         </div>
 
         <div class="body">
-          <textarea placeholder="내용을 입력하세요" name="body" required autofocus aria-label="Enter a note" maxlength="500" 
+          <textarea placeholder="내용을 입력하세요" name="body" required aria-label="Enter a note" maxlength="500" 
           >${body}</textarea>
         </div>
         <div class="btn-wrapper">
