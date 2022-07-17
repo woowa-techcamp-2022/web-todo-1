@@ -4,7 +4,6 @@ export function removeCard(id, tasks) {
   return tasks.filter((task) => task.id !== Number(id));
 }
 
-/** idx없으면 제일 맨뒤에 넣어준다. */
 export function insertCard(tasks, card, idx) {
   return [...tasks.slice(0, idx), card, ...tasks.slice(idx)];
 }
