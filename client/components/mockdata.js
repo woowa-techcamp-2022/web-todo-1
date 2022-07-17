@@ -1,4 +1,4 @@
-export const data = {
+const data = {
   1: {
     name: "한 일",
     tasks: [
@@ -87,3 +87,5 @@ export const data = {
     ],
   },
 };
+
+export default data;

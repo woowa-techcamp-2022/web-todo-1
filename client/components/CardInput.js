@@ -11,6 +11,7 @@ export default class CardInput extends Component {
       title: "",
       body: "",
     };
+
     this.columnId = columnId;
     this.store = new Store(initialState);
     this.bindEvents();
@@ -21,8 +22,7 @@ export default class CardInput extends Component {
       this.store.setState(target.name, target.value);
       textareaHeightChange(target);
       this.handleActiveButton(target);
-    }) //
-      .on("submit", this.submitNewCard.bind(this));
+    }).on("submit", this.submitNewCard.bind(this));
   }
 
   submitNewCard(event) {

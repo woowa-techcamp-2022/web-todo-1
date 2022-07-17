@@ -1,7 +1,6 @@
 class TodoAPI {
   constructor() {
     this.BASEURL = "/todo";
-    const requestOption = {};
   }
 
   getTodoList() {
@@ -34,7 +33,7 @@ class TodoAPI {
         }
       });
     } catch (error) {
-      console.log(error);
+      throw new Error(error);
     }
   }
 
@@ -72,7 +71,7 @@ class TodoAPI {
         }
       );
     } catch (error) {
-      console.log(error);
+      throw new Error(error);
     }
   }
 }

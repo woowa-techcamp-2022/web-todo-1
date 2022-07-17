@@ -76,7 +76,7 @@ export default class TodoList extends Component {
         taskId: this.fromTaskId,
         fromColumnId: this.fromColumnId,
         toColumnId,
-      }).then((result) => {
+      }).then(() => {
         this.store.setState("todoList", {
           ...todoList,
           [this.fromColumnId]: { name: fromName, tasks: newFromTasks },
@@ -97,7 +97,7 @@ export default class TodoList extends Component {
     };
     this.store.setState("todoList", newValue);
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       resolve("서버에 저장하지 않음");
     });
   }
@@ -239,7 +239,7 @@ export default class TodoList extends Component {
     const column = todoList[columnId];
     const { name, tasks } = column;
 
-    TodoAPI.deleteTask(taskId).then((result) => {
+    TodoAPI.deleteTask(taskId).then(() => {
       const newTasks = removeCard(taskId, tasks);
       const newValue = {
         ...todoList,
@@ -258,7 +258,7 @@ export default class TodoList extends Component {
     const newTasks = shiftCard({ ...card, id: 2 }, tasks);
 
     try {
-      TodoAPI.makeNewTask(detail).then((result) => {
+      TodoAPI.makeNewTask(detail).then(() => {
         const newValue = {
           ...todoList,
           [columnId]: { name, tasks: newTasks },
@@ -294,7 +294,6 @@ export default class TodoList extends Component {
   }
 
   render() {
-    console.log("render");
     const { todoList } = this.store.state;
     if (!todoList) {
       return;

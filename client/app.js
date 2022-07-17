@@ -5,6 +5,22 @@ import TodoList from "./components/TodoList";
 import TodoAPI from "./service/TodoAPI";
 import History from "./components/History";
 
+const getHistory = () => {
+  const requestOption = {};
+  try {
+    return fetch("/history", requestOption)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        return new Error("it is not 200~299 status");
+      })
+      .then((result) => result);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 function App() {
   const todoListContainer = qs(".todo-list-wrapper");
   const historyContainer = qs(".history");
@@ -29,22 +45,6 @@ function App() {
   closeBtn.addEventListener("click", () => {
     drawer.classList.remove("open");
   });
-}
-
-function getHistory() {
-  const requestOption = {};
-  try {
-    return fetch("/history", requestOption)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        return new Error("it is not 200~299 status");
-      })
-      .then((result) => result);
-  } catch (error) {
-    throw new Error(error);
-  }
 }
 
 const app = new App();

@@ -1,5 +1,4 @@
 import Component from "./Component";
-import { createElementWithClass, emit } from "../util";
 import Store from "../util/Store";
 
 /**
@@ -20,8 +19,8 @@ export default class History extends Component {
         `${title}를 ${fromColumnTitle}에서 ${toColumnTitle}으로 <strong>이동</strong>하였습니다.`,
     };
     this.container.innerHTML = history
-      .map((item) => {
-        const html = `
+      .map(item => {
+        const html = ` 
         <li class="action-item">
             <div class="profile">
               <img src="60c256386b0f7fdefb50.png" alt="">
