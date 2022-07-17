@@ -13,13 +13,14 @@ export default class History extends Component {
   render(history) {
     const actionTypeMap = {
       1: ({ title, fromColumnTitle }) =>
-        `${title}를 ${fromColumnTitle}에 <strong>등록</strong>하였습니다.`,
-      2: ({ title }) => `${title}를 <strong>삭제</strong>하였습니다.`,
+        `<strong>${title}</strong>(을)를 <strong>${fromColumnTitle}</strong>에 <strong>등록</strong>하였습니다.`,
+      2: ({ title }) =>
+        `<strong>${title}</strong>(을)를 <strong>삭제</strong>하였습니다.`,
       4: ({ fromColumnTitle, toColumnTitle, title }) =>
-        `${title}를 ${fromColumnTitle}에서 ${toColumnTitle}으로 <strong>이동</strong>하였습니다.`,
+        `<strong>${title}</strong>(을)를 <strong>${fromColumnTitle}</strong>에서 <strong>${toColumnTitle}</strong>(으)로 <strong>이동</strong>하였습니다.`,
     };
     this.container.innerHTML = history
-      .map(item => {
+      .map((item) => {
         const html = ` 
         <li class="action-item">
             <div class="profile">

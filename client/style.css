@@ -290,6 +290,11 @@ body {
   margin-top: var(--content-margin);
   line-height: 23px;
 }
+
+.action-item .body strong {
+  font-weight: 700;
+}
+
 .action-item .time-stamp {
   margin-top: var(--content-margin);
   font-size: var(--action-time-stamp-text);
